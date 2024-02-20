@@ -11,21 +11,22 @@
 const cardTemplate = document.querySelector('#card-template').content;
 const placeList = document.querySelector('.places__list');
 
-function createCard(data) {
+function createCard(dataCard, deleteCard) {
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
   const deleteButton = cardElement.querySelector('.card__delete-button');
 
-  cardElement.querySelector('.card__image').src = data.link;
-  cardElement.querySelector('.card__title').textContent = data.name;
+  cardElement.querySelector('.card__image').alt = dataCard.alt;
+  cardElement.querySelector('.card__image').src = dataCard.link;
+  cardElement.querySelector('.card__title').textContent = dataCard.name;
 
   deleteButton.addEventListener('click', () => {
-    deleteCard(cardElement);
+    deleteCard(dataCard, cardElement);
   });
 
   return cardElement;
 }
 
-function deleteCard(cardElement) {
+function deleteCard(dataCard, cardElement) {
   cardElement.remove();
 }
 
