@@ -1,16 +1,6 @@
 // Функция открытия попапа
 
 export function openModal(popupElement) {
-  const nameInputProfile = document.querySelector('.popup__input_type_name');
-  const jobInputProfile = document.querySelector(
-    '.popup__input_type_description'
-  );
-  const profileName = document.querySelector('.profile__title');
-  const profileDescription = document.querySelector('.profile__description');
-
-  nameInputProfile.value = profileName.textContent;
-  jobInputProfile.value = profileDescription.textContent;
-
   popupElement.classList.add('popup_is-animated');
 
   setTimeout(() => {

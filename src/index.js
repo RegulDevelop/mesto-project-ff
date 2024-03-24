@@ -1,10 +1,5 @@
 import './pages/index.css';
-import {
-  createCard,
-  deleteCard,
-  likeCard,
-  imageCard,
-} from './components/card.js';
+import { createCard, deleteCard, likeCard } from './components/card.js';
 import {
   openModal,
   closeModal,
@@ -36,7 +31,7 @@ const linkInputImage = addCardForm.querySelector('.popup__input_type_url');
 // Создание и добавление карточек из массива
 
 initialCards.forEach((element) => {
-  const cardElement = createCard(element, deleteCard, likeCard, imageCard);
+  const cardElement = createCard(element, deleteCard, likeCard, openImageCard);
   placeList.append(cardElement);
 });
 
@@ -79,7 +74,7 @@ function handleAddCardSubmit(evt) {
     newCardData,
     deleteCard,
     likeCard,
-    imageCard
+    openImageCard
   );
 
   placeList.prepend(newCardElement);
@@ -87,7 +82,38 @@ function handleAddCardSubmit(evt) {
   addCardForm.reset();
 }
 
-profileButton.addEventListener('click', () => openModal(profilePopup));
+// Функция заполнения формы редактирования профиля
+
+function fillProfileForm() {
+  const nameInputProfile = document.querySelector('.popup__input_type_name');
+  const jobInputProfile = document.querySelector(
+    '.popup__input_type_description'
+  );
+  const profileName = document.querySelector('.profile__title');
+  const profileDescription = document.querySelector('.profile__description');
+
+  nameInputProfile.value = profileName.textContent;
+  jobInputProfile.value = profileDescription.textContent;
+}
+
+// Функция клика по изображению
+
+function openImageCard(dataCard) {
+  const popupImage = document.querySelector('.popup__image');
+  const imageCaption = document.querySelector('.popup__caption');
+
+  if (dataCard) {
+    popupImage.src = dataCard.link || '';
+    imageCaption.textContent = dataCard.name || '';
+  }
+
+  openModal(imageOpen);
+}
+
+profileButton.addEventListener('click', () => {
+  openModal(profilePopup);
+  fillProfileForm();
+});
 addCardButton.addEventListener('click', () => openModal(addCardPopup));
 
 profileCloseButton.addEventListener('click', () => closeModal(profilePopup));

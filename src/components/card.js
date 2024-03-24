@@ -1,5 +1,3 @@
-import { closePopupEscape } from './modal.js';
-
 // Функции для работы с карточками
 
 export function createCard(dataCard, deleteCard, likeCard, imageCard) {
@@ -40,25 +38,4 @@ export function deleteCard(deleteElement) {
 
 export function likeCard(likeButton) {
   likeButton.classList.toggle('card__like-button_is-active');
-}
-
-// Функция клика по изображению
-
-export function imageCard(dataCard) {
-  const popupImage = document.querySelector('.popup__image');
-  const imageCaption = document.querySelector('.popup__caption');
-  const imageOpen = document.querySelector('.popup_type_image');
-
-  imageOpen.classList.add('popup_is-animated');
-
-  setTimeout(() => {
-    imageOpen.classList.add('popup_is-opened');
-  }, 10);
-
-  if (dataCard) {
-    popupImage.src = dataCard.link || '';
-    imageCaption.textContent = dataCard.name || '';
-  }
-
-  document.addEventListener('keydown', closePopupEscape);
 }
