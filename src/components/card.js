@@ -13,7 +13,7 @@ export function createCard(
   deleteCard,
   likeCard,
   imageCard,
-  currentUser
+  currentUserId
 ) {
   const cardTemplate = document.querySelector('#card-template').content;
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
@@ -24,11 +24,11 @@ export function createCard(
   const isLiked = getLikeState(dataCard._id);
 
   if (dataCard) {
-    cardElement.querySelector('.card__image').alt = dataCard.alt || '';
     cardElement.querySelector('.card__image').src = dataCard.link || '';
+    cardElement.querySelector('.card__image').alt = dataCard.name || '';
     cardElement.querySelector('.card__title').textContent = dataCard.name || '';
 
-    if (dataCard.owner._id === currentUser._id) {
+    if (dataCard.owner._id === currentUserId._id) {
       deleteButton.style.visibility = 'visible';
     } else {
       deleteButton.style.visibility = 'hidden';

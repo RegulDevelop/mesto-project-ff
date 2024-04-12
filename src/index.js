@@ -44,9 +44,11 @@ const validationConfig = {
   inputSelector: '.popup__input',
   submitButtonSelector: '.popup__button',
   inactiveButtonClass: 'button_inactive',
-  inputErrorClass: 'popup__input_type_error',
+  inputErrorClass: 'form__input_type_error',
   errorClass: 'form__input-error_active',
 };
+
+let currentUserId = null;
 
 // Функция изменения текста кнопки на "Сохранение..."
 
@@ -75,9 +77,6 @@ function handleProfileSubmit(evt) {
   const profileName = document.querySelector('.profile__title');
   const profileDescription = document.querySelector('.profile__description');
 
-  profileName.textContent = nameValue;
-  profileDescription.textContent = jobValue;
-
   showSavingText(saveButton);
 
   closeModal(profilePopup);
@@ -85,18 +84,23 @@ function handleProfileSubmit(evt) {
   updateUserProfile(nameValue, jobValue)
     .then((data) => {
       console.log(data);
-      resetButtonText(saveButton);
+
+      profileName.textContent = nameValue;
+      profileDescription.textContent = jobValue;
+
       closeModal(profilePopup);
     })
     .catch((error) => {
       console.error('Ошибка при обновлении данных профиля:', error);
+    })
+    .finally(() => {
       resetButtonText(saveButton);
     });
 }
 
 // Обработчик «отправки» формы addCard
 
-function handleAddCardSubmit(evt, currentUser) {
+function handleAddCardSubmit(evt) {
   evt.preventDefault();
 
   const nameValue = nameInputImage.value;
@@ -112,16 +116,17 @@ function handleAddCardSubmit(evt, currentUser) {
         deleteCard,
         likeCard,
         openImageCard,
-        currentUser
+        currentUserId
       );
       placeList.prepend(newCardElement);
       closeModal(addCardPopup);
       addCardForm.reset();
       clearValidation(addCardForm, validationConfig);
-      resetButtonText(saveButton);
     })
     .catch((error) => {
       console.error('Ошибка при добавлении новой карточки:', error);
+    })
+    .finally(() => {
       resetButtonText(saveButton);
     });
 }
@@ -145,10 +150,11 @@ function handleUserAvatarSubmit(evt) {
       closeModal(userAvatarPopup);
       userAvatarForm.reset();
       clearValidation(userAvatarForm, validationConfig);
-      resetButtonText(saveButton);
     })
     .catch((error) => {
       console.error('Ошибка при обновлении аватара:', error);
+    })
+    .finally(() => {
       resetButtonText(saveButton);
     });
 }
@@ -175,6 +181,7 @@ function openImageCard(dataCard) {
 
   if (dataCard) {
     popupImage.src = dataCard.link || '';
+    popupImage.alt = dataCard.name || '';
     imageCaption.textContent = dataCard.name || '';
   }
 
@@ -203,17 +210,7 @@ userAvatarPopup.addEventListener('click', closePopupOverlay);
 
 profileForm.addEventListener('submit', handleProfileSubmit);
 addCardForm.addEventListener('submit', (evt) => {
-  getUserInfo()
-    .then((userData) => {
-      const currentUser = userData;
-      handleAddCardSubmit(evt, currentUser);
-    })
-    .catch((error) => {
-      console.error(
-        'Ошибка при получении данных текущего пользователя:',
-        error
-      );
-    });
+  handleAddCardSubmit(evt);
 });
 userAvatarForm.addEventListener('submit', (evt) => {
   handleUserAvatarSubmit(evt);
@@ -227,6 +224,8 @@ Promise.all([getUserInfo(), getInitialCards()])
   .then(([userData, cardsData]) => {
     const userNameElement = document.querySelector('.profile__title');
     const userAboutElement = document.querySelector('.profile__description');
+
+    currentUserId = userData;
 
     userNameElement.textContent = userData.name;
     userAboutElement.textContent = userData.about;
